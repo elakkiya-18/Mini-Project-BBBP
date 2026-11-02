@@ -1,0 +1,119 @@
+
+{% extends "base.html" %}
+{% block title %}Respect Quest{% endblock %}
+
+{% block content %}
+<div id="welcomeSplash" class="welcome-splash" aria-hidden="true">
+    <div class="splash-card">
+        <div class="splash-icon">🌸</div>
+        <p class="splash-kicker">WELCOME TO</p>
+        <h1>RESPECT QUEST</h1>
+        <p>Learn, play, and grow through respect, equality, and dignity.</p>
+        <button type="button" class="btn btn-light btn-lg px-4" id="enterQuest">
+            Enter the Quest
+        </button>
+    </div>
+</div>
+
+<section class="hero-card text-center">
+    <div class="hero-icon">🌸</div>
+    <h1>RESPECT QUEST</h1>
+    <p class="lead">
+        An interactive positive psychology game promoting
+        respect, equality, dignity and awareness.
+    </p>
+
+    <div class="d-flex justify-content-center gap-2 flex-wrap mt-4">
+        <a href="{{ url_for('register') }}" class="btn btn-primary btn-lg">
+            Start Your Quest
+        </a>
+        <a href="{{ url_for('login') }}" class="btn btn-outline-primary btn-lg">
+            Login
+        </a>
+    </div>
+</section>
+
+<div class="row g-4 mt-3">
+    <div class="col-md-4">
+        <div class="feature-card">
+            <div class="feature-icon">🎮</div>
+            <h4>Interactive Game</h4>
+            <p>Complete 10 levels with 10 questions per level.</p>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="feature-card">
+            <div class="feature-icon">🌱</div>
+            <h4>Learning Moments</h4>
+            <p>Receive explanations and positive feedback after gameplay.</p>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="feature-card">
+            <div class="feature-icon">🏆</div>
+            <h4>Certificate</h4>
+            <p>Complete all levels and generate a completion certificate.</p>
+        </div>
+    </div>
+</div>
+
+<section class="bbbp-section mt-5">
+    <div class="bbbp-heading text-center">
+        <span class="bbbp-kicker">🌸 KNOWLEDGE FOR CHANGE</span>
+        <h2>Beti Bachao Beti Padhao</h2>
+        <p class="lead mb-0">
+            Save the Girl Child • Educate the Girl Child
+        </p>
+    </div>
+
+    <div class="bbbp-intro">
+        <div class="bbbp-intro-icon">🇮🇳</div>
+        <div>
+            <p class="mb-0">
+                <strong>Beti Bachao Beti Padhao (BBBP)</strong> is a flagship
+                national initiative launched by the Government of India in
+                January 2015. The scheme addresses the critical issue of
+                declining Child Sex Ratio (CSR) and aims to empower women and
+                girls across the country.
+            </p>
+        </div>
+    </div>
+
+    <div class="row g-4 mt-1">
+        <div class="col-lg-6">
+            <div class="bbbp-info-card objectives-card">
+                <div class="bbbp-card-icon">🎯</div>
+                <h3>Core Objectives</h3>
+                <ul class="bbbp-list">
+                    <li>🛡️ Prevent gender-biased sex selection and ensure the survival and protection of the girl child.</li>
+                    <li>📚 Ensure education and participation of the girl child in society.</li>
+                    <li>💜 Challenge and change deep-rooted mindsets and patriarchal stereotypes regarding daughters.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="col-lg-6">
+            <div class="bbbp-info-card strategy-card">
+                <div class="bbbp-card-icon">🌍</div>
+                <h3>Key Strategy: A Two-Pronged Approach</h3>
+                <div class="strategy-point">
+                    <span>📣</span>
+                    <p><strong>Mass Media Campaign:</strong> A nationwide awareness and advocacy campaign to shift public mindsets and celebrate the birth and education of girls.</p>
+                </div>
+                <div class="strategy-point">
+                    <span>🤝</span>
+                    <p><strong>Multi-Sectoral Action:</strong> Targeted, measurable interventions in districts with a critically low child sex ratio, through cooperation between Women &amp; Child Development, Health &amp; Family Welfare, and Education ministries.</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="bbbp-quote text-center mt-4">
+        <span>✨</span>
+        <strong>Every daughter deserves safety, education, opportunity, and respect.</strong>
+        <span>✨</span>
+    </div>
+</section>
+{% endblock %}

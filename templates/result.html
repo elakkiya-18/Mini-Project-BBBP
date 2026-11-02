@@ -1,0 +1,72 @@
+
+{% extends "base.html" %}
+{% block title %}Level {{ level }} Result{% endblock %}
+
+{% block content %}
+<div class="result-card text-center">
+    <div class="result-icon">🌟</div>
+    <h2>Level {{ level }} Completed!</h2>
+    <div class="score-big">{{ score }}/100</div>
+    <p class="mb-1">Your star rating</p>
+    <div class="level-rating-stars" role="img"
+         aria-label="{{ star_rating }} out of 5 stars">
+        {% for value in range(1, 6) %}
+        <span class="{% if value <= star_rating %}is-filled{% endif %}">★</span>
+        {% endfor %}
+    </div>
+    <p class="text-muted">{{ star_rating }} out of 5 stars based on your answers</p>
+
+    {% if score >= 80 %}
+        <p class="lead text-success">Excellent learning progress!</p>
+    {% elif score >= 50 %}
+        <p class="lead text-primary">Good work! Keep learning.</p>
+    {% else %}
+        <p class="lead text-warning">Learning moment — keep going!</p>
+    {% endif %}
+</div>
+
+<h3 class="mt-4">Learning Review</h3>
+
+{% for q in questions %}
+<div class="review-card">
+    <h5>{{ loop.index }}. {{ q.question }}</h5>
+
+    {% set answer_is_correct = q.selected_answer == q.correct_answer %}
+    <div class="question-rating-stars {% if answer_is_correct %}is-correct{% endif %}"
+         role="img"
+         aria-label="{{ q.rating or (5 if answer_is_correct else 1) }} out of 5 stars">
+        {% for value in range(1, 6) %}
+        <span class="{% if value <= (q.rating or (5 if answer_is_correct else 1)) %}is-filled{% endif %}">★</span>
+        {% endfor %}
+    </div>
+
+    <p class="mt-2">
+        Your answer:
+        <strong>{{ q.selected_answer or "Not answered" }}</strong>
+    </p>
+
+    <p>
+        Correct answer:
+        <strong>{{ q.correct_answer }}</strong>
+    </p>
+
+    {% if q.explanation %}
+    <div class="learning-box">
+        💡 {{ q.explanation }}
+    </div>
+    {% endif %}
+</div>
+{% endfor %}
+
+<div class="text-center mt-4">
+    {% if level < 10 %}
+        <a href="{{ url_for('quiz', level=level+1) }}"
+           class="btn btn-primary">
+            Continue to Level {{ level+1 }} →
+        </a>
+    {% else %}
+        <a href="{{ url_for('dashboard') }}"
+           class="btn btn-primary">Back to Dashboard</a>
+    {% endif %}
+</div>
+{% endblock %}

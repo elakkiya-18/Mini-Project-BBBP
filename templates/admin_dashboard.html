@@ -1,0 +1,97 @@
+
+{% extends "base.html" %}
+{% block title %}Admin Dashboard{% endblock %}
+
+{% block content %}
+<h2>Admin Dashboard 🔐</h2>
+<p class="text-muted">Monitor Respect Quest users and progress.</p>
+
+<div class="row g-3">
+    <div class="col-md-4">
+        <div class="stat-card">
+            <h6>Total Users</h6>
+            <div class="stat-number">{{ total_users }}</div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="stat-card">
+            <h6>Completed Games</h6>
+            <div class="stat-number">{{ completed_games }}</div>
+        </div>
+    </div>
+
+    <div class="col-md-4">
+        <div class="stat-card">
+            <h6>Certificates</h6>
+            <div class="stat-number">{{ total_certificates }}</div>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 mt-4">
+    <div class="card-body">
+        <h4>Users</h4>
+
+        <div class="table-responsive">
+        <table class="table align-middle">
+            <thead>
+                <tr>
+                    <th>Username</th>
+                    <th>Email</th>
+                    <th>Levels</th>
+                    <th>Score</th>
+                    <th>Details</th>
+                    <th>Certificate</th>
+                    <th>Remove</th>
+                </tr>
+            </thead>
+            <tbody>
+            {% for user in users %}
+                <tr>
+                    <td>{{ user.username }}</td>
+                    <td>{{ user.email }}</td>
+                    <td>{{ user.completed_levels }}/10</td>
+                    <td>{{ user.score }}/1000</td>
+                    <td>
+                        <a class="btn btn-sm btn-outline-primary"
+                           href="{{ url_for('admin_user', user_id=user.id) }}">
+                            View
+                        </a>
+                    </td>
+                    <td>
+                        {% if user.has_certificate %}
+                        <a class="btn btn-sm btn-outline-success"
+                           href="{{ url_for('admin_user_certificate', user_id=user.id) }}"
+                           target="_blank" rel="noopener">View</a>
+                        <a class="btn btn-sm btn-success"
+                           href="{{ url_for('admin_user_certificate', user_id=user.id, download=1) }}">
+                            Download
+                        </a>
+                        {% else %}
+                        <span class="text-muted">Not issued</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <form method="POST"
+                              action="{{ url_for('delete_user', user_id=user.id) }}"
+                              onsubmit="return confirm('Remove this user and all of their quiz data? This cannot be undone.');">
+                            <button class="btn btn-sm btn-outline-danger" type="submit">
+                                Remove
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+            {% else %}
+                <tr>
+                    <td colspan="7" class="text-center text-muted">
+                        No users registered yet.
+                    </td>
+                </tr>
+            {% endfor %}
+            </tbody>
+        </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,154 @@
+{% extends "base.html" %}
+{% block title %}Level {{ level }}{% endblock %}
+
+{% block content %}
+
+<!-- Level Header -->
+<div class="quiz-header mb-4">
+    <div>
+        <span class="badge bg-success fs-6">LEVEL {{ level }}</span>
+        <h2 class="mt-2">{{ theme }}</h2>
+        <p class="text-muted">
+            🌸 Learn values that support Beti Bachao Beti Padhao.
+        </p>
+    </div>
+
+    {% if has_resume %}
+    <div class="alert alert-info shadow-sm">
+        <strong>Welcome back!</strong> Your progress is saved. Resuming from Question {{ resume_index + 1 }}.
+    </div>
+    {% endif %}
+
+    <div id="questionCounter" class="fw-bold text-primary">
+        Question 1 / 10
+    </div>
+</div>
+
+<!-- Progress Bar -->
+<div class="progress mb-4 rq-progress">
+    <div id="quizProgress"
+         class="progress-bar bg-success"
+         style="width:0%">
+        0%
+    </div>
+</div>
+
+<!-- Quiz Form -->
+<form method="POST"
+      action="{{ url_for('submit_level', level=level) }}"
+      id="quizForm" data-resume-index="{{ resume_index }}">
+
+{% for q in questions %}
+
+<div class="question-card {% if loop.index0 != resume_index %}d-none{% endif %}"
+     data-index="{{ loop.index0 }}"
+    data-correct="{{ q.correct_answer }}"
+    data-learning="{{ q.learning_message }}"
+    data-explanation="{{ q.explanation }}"
+    data-rating-a="{{ q.option_a_rating }}"
+    data-rating-b="{{ q.option_b_rating }}"
+    data-rating-c="{{ q.option_c_rating }}"
+    data-rating-d="{{ q.option_d_rating }}">
+    {% if q.selected_answer %}
+    <input type="hidden" name="q_{{ q.id }}" value="{{ q.selected_answer }}">
+    {% endif %}
+
+    <!-- Question Number -->
+    <div class="question-number">
+        Question {{ loop.index }} of 10
+    </div>
+
+    <!-- Question -->
+    <h4 class="mb-4">{{ q.question }}</h4>
+
+    <!-- Options -->
+    <label class="option-card">
+    <input type="radio" name="q_{{ q.id }}" value="A"
+           {% if q.selected_answer == "A" %}checked{% endif %}
+           {% if q.selected_answer %}disabled{% endif %} required>
+    <span><strong>A.</strong> {{ q.option_a }}</span>
+</label>
+
+<label class="option-card">
+    <input type="radio" name="q_{{ q.id }}" value="B"
+           {% if q.selected_answer == "B" %}checked{% endif %}
+           {% if q.selected_answer %}disabled{% endif %}>
+    <span><strong>B.</strong> {{ q.option_b }}</span>
+</label>
+
+<label class="option-card">
+    <input type="radio" name="q_{{ q.id }}" value="C"
+           {% if q.selected_answer == "C" %}checked{% endif %}
+           {% if q.selected_answer %}disabled{% endif %}>
+    <span><strong>C.</strong> {{ q.option_c }}</span>
+</label>
+
+<label class="option-card">
+    <input type="radio" name="q_{{ q.id }}" value="D"
+           {% if q.selected_answer == "D" %}checked{% endif %}
+           {% if q.selected_answer %}disabled{% endif %}>
+    <span><strong>D.</strong> {{ q.option_d }}</span>
+</label>
+
+    <!-- Buttons -->
+    <div class="d-flex justify-content-between mt-4">
+
+        {% if not loop.first %}
+        <button type="button" class="btn btn-outline-secondary prev-btn">
+            ⬅ Previous
+        </button>
+        {% else %}
+        <span></span>
+        {% endif %}
+
+        <button type="button" class="btn btn-success check-btn {% if q.selected_answer %}d-none{% endif %}">
+            Check Answer
+        </button>
+
+        {% if not loop.last %}
+        <button type="button" class="btn btn-primary next-btn {% if not q.selected_answer %}d-none{% endif %}">
+            Next ➜
+        </button>
+        {% else %}
+        <button type="submit" class="btn btn-primary next-btn {% if not q.selected_answer %}d-none{% endif %}">
+            Finish Level ✓
+        </button>
+        {% endif %}
+
+    </div>
+
+    {% set answer_is_correct = q.selected_answer == q.correct_answer %}
+    {% set answer_rating = q["option_" ~ q.selected_answer|lower ~ "_rating"] if q.selected_answer else 0 %}
+    <div class="answer-rating-box {% if not q.selected_answer %}d-none{% endif %} mt-3"
+         aria-live="polite">
+        <h5 class="answer-rating-title">
+            {% if q.selected_answer %}
+                {{ answer_rating }}-star answer
+            {% else %}
+                Your answer rating
+            {% endif %}
+        </h5>
+        <div class="answer-rating-stars {% if answer_is_correct %}is-correct{% endif %}"
+             aria-label="{{ answer_rating }} out of 5 stars">
+            {% for value in range(1, 6) %}
+            <span class="{% if value <= answer_rating %}is-filled{% endif %}">★</span>
+            {% endfor %}
+        </div>
+        <div class="bbbp-box mt-3 {% if not q.selected_answer or answer_is_correct %}d-none{% endif %}">
+
+        <h6>🌸 Beti Bachao Beti Padhao Learning Point</h6>
+
+        <p class="answer-rating-explanation">{{ q.learning_message }}</p>
+
+        </div>
+    </div>
+
+</div>
+
+</div>
+
+{% endfor %}
+
+</form>
+
+{% endblock %}

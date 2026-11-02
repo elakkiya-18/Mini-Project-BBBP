@@ -1,0 +1,83 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}Respect Quest{% endblock %}</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css"
+          rel="stylesheet">
+
+    <link rel="stylesheet"
+          href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+
+<body>
+
+<nav class="navbar navbar-expand-lg navbar-dark rq-navbar">
+    <div class="container">
+        <a class="navbar-brand fw-bold" href="{{ url_for('index') }}">
+            🌸 Respect Quest
+        </a>
+
+        <div class="d-flex gap-2 align-items-center">
+            {% if session.get('user_id') %}
+                {% if session.get('is_admin') %}
+                    <a class="btn btn-light btn-sm"
+                       href="{{ url_for('admin_dashboard') }}">Admin</a>
+                {% else %}
+                    <a class="btn btn-light btn-sm"
+                       href="{{ url_for('dashboard') }}">Dashboard</a>
+                {% endif %}
+                <a class="btn btn-outline-light btn-sm"
+                   href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a class="btn btn-light btn-sm"
+                   href="{{ url_for('login') }}">Login</a>
+                <a class="btn btn-outline-light btn-sm"
+                   href="{{ url_for('register') }}">Register</a>
+            {% endif %}
+        </div>
+    </div>
+</nav>
+
+<main class="container py-4">
+
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            {% for category, message in messages %}
+                <div class="alert alert-{{ category }} shadow-sm">
+                    {{ message }}
+                </div>
+            {% endfor %}
+        {% endif %}
+    {% endwith %}
+
+    {% block content %}{% endblock %}
+
+</main>
+
+<footer class="text-center py-4 text-muted">
+    Respect Quest • Respect • Equality • Dignity
+</footer>
+
+<div id="interactionModal" class="rq-modal" role="dialog" aria-modal="true"
+     aria-labelledby="interactionModalTitle" aria-hidden="true">
+    <div class="rq-modal-card">
+        <button type="button" class="rq-modal-close" data-modal-close
+                aria-label="Close popup">&times;</button>
+        <div id="interactionModalIcon" class="rq-modal-icon">🌸</div>
+        <h3 id="interactionModalTitle">Welcome to Respect Quest</h3>
+        <p id="interactionModalMessage" class="mb-0"></p>
+        <button type="button" class="btn btn-primary mt-4" data-modal-close>
+            Continue
+        </button>
+    </div>
+</div>
+
+<div id="questToast" class="rq-toast" aria-live="polite"></div>
+
+<script src="{{ url_for('static', filename='js/game.js') }}"></script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+
+{% extends "base.html" %}
+{% block title %}Register{% endblock %}
+
+{% block content %}
+<div class="form-card">
+    <h2>Create Account 🌸</h2>
+    <p class="text-muted">Begin your Respect Quest.</p>
+
+    <form method="POST">
+        <label class="form-label">Username</label>
+        <input name="username" class="form-control mb-3" required>
+
+        <label class="form-label">Email</label>
+        <input name="email" type="email" class="form-control mb-3" required>
+
+        <label class="form-label">Mobile number</label>
+        <input name="phone" type="tel" class="form-control mb-3"
+               placeholder="+919876543210" required>
+
+        <label class="form-label">Password</label>
+        <div class="password-field mb-3">
+            <input name="password" type="password" class="form-control" required>
+            <button type="button" class="password-toggle" data-password-toggle
+                    aria-label="Show password" aria-pressed="false">👁</button>
+        </div>
+
+        <button class="btn btn-primary w-100">Create Account</button>
+    </form>
+</div>
+{% endblock %}

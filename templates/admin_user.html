@@ -1,0 +1,112 @@
+
+{% extends "base.html" %}
+{% block title %}User Details{% endblock %}
+
+{% block content %}
+<a href="{{ url_for('admin_dashboard') }}" class="btn btn-outline-secondary mb-3">
+    ← Back
+</a>
+
+<h2>{{ user.username }}</h2>
+<p>{{ user.email }}</p>
+<form method="POST" class="mb-4"
+      action="{{ url_for('delete_user', user_id=user.id) }}"
+      onsubmit="return confirm('Remove this user and all of their quiz data? This cannot be undone.');">
+    <button class="btn btn-outline-danger" type="submit">Remove User</button>
+</form>
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+        <h4>Level Results</h4>
+        <div class="table-responsive">
+        <table class="table">
+            <tr>
+                <th>Level</th>
+                <th>Score</th>
+                <th>Status</th>
+                <th>Completed At</th>
+            </tr>
+            {% for r in results %}
+            <tr>
+                <td>{{ r.level }}</td>
+                <td>{{ r.score }}/100</td>
+                <td>{{ "Completed" if r.completed else "In Progress" }}</td>
+                <td>{{ r.completed_at or "-" }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        </div>
+    </div>
+</div>
+
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+        <h4>Answer Details</h4>
+        <div class="table-responsive">
+        <table class="table table-sm">
+            <tr>
+                <th>Level</th>
+                <th>Question</th>
+                <th>Selected</th>
+                <th>Correct</th>
+                <th>Result</th>
+                <th>Rating</th>
+            </tr>
+            {% for a in answers %}
+            <tr>
+                <td>{{ a.level }}</td>
+                <td>{{ a.question }}</td>
+                <td>{{ a.selected_answer }}</td>
+                <td>{{ a.correct_answer }}</td>
+                <td>
+                    {% if a.is_correct %}
+                    <span class="badge bg-success">Correct</span>
+                    {% else %}
+                    <span class="badge bg-danger">Incorrect</span>
+                    {% endif %}
+                </td>
+                <td class="text-warning">{{ "★" * a.rating }}</td>
+            </tr>
+            {% endfor %}
+        </table>
+        </div>
+    </div>
+</div>
+
+{% if feedback %}
+<div class="card shadow-sm border-0 mb-4">
+    <div class="card-body">
+        <h4>User Feedback</h4>
+        {% for item in feedback %}
+        <div class="border-bottom py-3">
+            <strong>Level {{ item.level }}</strong>
+            {% if item.rating %}
+                <span class="text-warning ms-2">{{ "★" * item.rating }}</span>
+            {% endif %}
+            {% if item.comment %}
+                <p class="mb-1 mt-1">{{ item.comment }}</p>
+            {% endif %}
+            <small class="text-muted">{{ item.created_at }}</small>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endif %}
+
+{% if certificate %}
+<div class="alert alert-success">
+    Certificate: <strong>{{ certificate.certificate_number }}</strong><br>
+    Score: {{ certificate.final_score }}/1000<br>
+    Percentage: {{ certificate.percentage }}%<br>
+    <a class="btn btn-sm btn-success mt-2"
+       href="{{ url_for('admin_user_certificate', user_id=user.id) }}"
+       target="_blank" rel="noopener">
+        View Certificate
+    </a>
+    <a class="btn btn-sm btn-outline-success mt-2"
+       href="{{ url_for('admin_user_certificate', user_id=user.id, download=1) }}">
+        Download Certificate
+    </a>
+</div>
+{% endif %}
+{% endblock %}

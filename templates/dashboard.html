@@ -1,0 +1,92 @@
+
+{% extends "base.html" %}
+{% block title %}Dashboard{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center flex-wrap gap-2">
+    <div>
+        <h2>Welcome, {{ session.username }} 🌸</h2>
+        <p class="text-muted">Continue your journey of respect and equality.</p>
+    </div>
+    <a href="{{ url_for('levels') }}" class="btn btn-primary">View Levels</a>
+</div>
+
+<div class="card shadow-sm border-0 p-4 mt-3">
+    <h5>Recovery mobile number</h5>
+    <p class="text-muted mb-3">
+        Add or update the number where you want to receive password-reset OTPs.
+        Include the country code, for example +919876543210.
+    </p>
+    <form method="POST" action="{{ url_for('update_recovery_phone') }}"
+          class="row g-2 align-items-end">
+        <div class="col-md-8">
+            <label class="form-label" for="recoveryPhone">Mobile number</label>
+            <input id="recoveryPhone" name="phone" type="tel"
+                   class="form-control" value="{{ current_user_phone or '' }}"
+                   placeholder="+919876543210" required>
+        </div>
+        <div class="col-md-4">
+            <button class="btn btn-outline-primary w-100">Save mobile number</button>
+        </div>
+    </form>
+</div>
+
+<div class="card shadow-sm border-0 p-4 mt-3">
+    <h5>Overall Progress</h5>
+    <div class="progress rq-progress">
+        <div class="progress-bar" style="width: {{ progress }}%">
+            {{ progress }}%
+        </div>
+    </div>
+    <p class="mt-2 mb-0">{{ progress }}% of the 100-question journey completed.</p>
+</div>
+
+<div class="row g-3 mt-2">
+{% for level in range(1, 11) %}
+    {% set result = result_map.get(level) %}
+    <div class="col-md-6 col-lg-4">
+        <div class="level-card">
+            <div class="d-flex justify-content-between">
+                <h5>Level {{ level }}</h5>
+                {% if level in completed %}
+                    <span class="badge bg-success">Completed</span>
+                {% elif level in resume_levels %}
+                    <span class="badge bg-warning text-dark">In Progress</span>
+                {% elif level == 1 or (level-1) in completed %}
+                    <span class="badge bg-primary">Available</span>
+                {% else %}
+                    <span class="badge bg-secondary">Locked</span>
+                {% endif %}
+            </div>
+
+            {% if result %}
+                <p class="mb-2">Score: <strong>{{ result.score }}/100</strong></p>
+                <div class="level-badge {{ result.badge.class }}">
+                    <span>{{ result.badge.icon }}</span>
+                    <strong>{{ result.badge.title }}</strong>
+                </div>
+            {% endif %}
+
+            {% if level == 1 or (level-1) in completed %}
+                <a href="{{ url_for('quiz', level=level) }}"
+                   class="btn {% if level in completed %}btn-outline-primary{% elif level in resume_levels %}btn-warning{% else %}btn-outline-primary{% endif %} btn-sm">
+                    {% if level in completed %}View Result
+                    {% elif level in resume_levels %}Resume Level
+                    {% else %}Play Level{% endif %}
+                </a>
+            {% endif %}
+        </div>
+    </div>
+{% endfor %}
+</div>
+
+{% if completed|length == 10 %}
+<div class="certificate-box mt-4 text-center">
+    <h3>🏆 Quest Completed!</h3>
+    <p>You completed all 10 levels.</p>
+    <a href="{{ url_for('certificate') }}" class="btn btn-success">
+        Generate Certificate
+    </a>
+</div>
+{% endif %}
+{% endblock %}
