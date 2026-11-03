@@ -54,6 +54,9 @@ RESPECT QUEST - BEGINNER SETUP
 
    python import_questions.py
 
+   Importing another question set deactivates the current questions while keeping
+   old question records so saved answers and results remain viewable.
+
 10. Start the website:
 
    python app.py

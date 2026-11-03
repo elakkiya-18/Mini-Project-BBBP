@@ -104,7 +104,7 @@ for level, selected_questions in LEVEL_MAP.items():
 # Replace the question bank only after every row and rating passes validation.
 init_db()
 conn = sqlite3.connect(DB_PATH)
-conn.execute("DELETE FROM questions")
+conn.execute("UPDATE questions SET is_active=0")
 
 total_questions = 0
 
@@ -164,6 +164,7 @@ for level in range(1, 11):
         conn.execute("""
         INSERT INTO questions(
             level,
+            is_active,
             question,
             option_a,
             option_b,
@@ -180,7 +181,7 @@ for level in range(1, 11):
             positive_message,
             learning_message
         )
-        VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
+        VALUES (?, 1, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         (
             level,
